@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rank Server Minecraft</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('background.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-image: url('backgroundb.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        h1 {
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(270deg, red, yellow, green, blue, indigo, violet);
+            background-size: 1400%;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: rainbow-text-animation 5s linear infinite;
+        }
+        @keyframes rainbow-text-animation {
+            0% {
+                background-position: 0%;
+            }
+            100% {
+                background-position: 100%;
+            }
+        }
+        .rank-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .rank-list li {
+            cursor: pointer;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            transition: transform 0.2s;
+        }
+        .rank-list li:hover {
+            transform: scale(1.1);
+        }
+        .rank-list li:active {
+            transform: scale(0.9);
+        }
+        .rank-list .aquanauts {
+            background-color: #FF5722;
+            color: white;
+        }
+        .rank-list .atlas {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .rank-list .serpent {
+            background-color: #9C27B0;
+            color: white;
+        }
+        .rank-list .leviathan {
+            background-color: #0073e6;
+            color: white;
+        }
+        .rank-list .custom-rank {
+            background-color: #FFC107;
+            color: white;
+        }
+        .popup, .feature-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content, .feature-popup-content {
+            background-color: rgba(225, 225, 225, 0.9);
+            padding: 10px;
+            border-radius: 0px;
+            text-align: center;
+            width: 30%;
+            max-width: 500px;
+            position: relative;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .popup-content p, .feature-popup-content p {
+            color: black;
+            text-shadow: none;
+        }
+        p {
+            color: orange;
+            text-shadow: 1px 1px 0 #000, -1px -1px 0 #000,
+                         1px -1px 0 #000, -1px 1px 0 #000;
+        }
+        .whatsapp-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-image: url('whatsapp_logo.png');
+            background-size: cover;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .whatsapp-popup {
+            display: none;
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background-color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>- RANK LIST -</h1>
+        <p>Anda Bosen Dengan Rank Nelayan? 😗</br>
+        Ayo Beli Rank untuk mendukung server ini</p>
+        <ul class="rank-list">
+            <li class="aquanauts" onclick="showPopup('aquanauts')">AQUANAUTS</li>
+            <li class="atlas" onclick="showPopup('atlas')">ATLAS</li>
+            <li class="serpent" onclick="showPopup('serpent')">SERPENT</li>
+            <li class="leviathan" onclick="showPopup('leviathan')">LEVIATHAN</li>
+            <li class="custom-rank" onclick="showPopup('custom-rank')">CUSTOM RANK</li>
+        </ul>
+        <p>Ingin membeli rank?</br> hubungi: <strong>+62 882-2539-4429</strong></p>
+    </div>
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close" onclick="hidePopup()">&times;</span>
+            <p id="rank-price"></p>
+            <button onclick="showFeatures()">Lihat Fitur</button>
+        </div>
+    </div>
+
+    <div id="feature-popup" class="feature-popup">
+        <div class="feature-popup-content">
+            <span class="close" onclick="hideFeaturePopup()">&times;</span>
+            <p id="rank-features"></p>
+        </div>
+    </div>
+
+    <div id="whatsapp-popup" class="whatsapp-popup">
+        <span class="close" onclick="hideWhatsappPopup()">&times;</span>
+        <a href="https://wa.me/6288225394429" target="_blank"> Buy Rank ></a>
+    </div>
+
+    <audio id="click-sound" src="sound_klik.mp3"></audio>
+    <div class="whatsapp-button" onclick="showWhatsappPopup()"></div>
+    
+    <script>
+        function showPopup(rank) {
+            const rankDetails = {
+                aquanauts: {
+                    price: 'Harga: Rp 10.000',
+                    features: '6 Homes\n100K money\n10K Claim Block\nFeed'
+                },
+                atlas: {
+                    price: 'Harga: Rp 20.000',
+                    features: '8 Homes\n150K money\n12K Claim Block\nFeed\nHeal'
+                },
+                serpent: {
+                    price: 'Harga: Rp 30.000',
+                    features: '12 Homes\n250K money\n15K Claim Block\nFeed\nHeal\nFly'
+                },
+                leviathan: {
+                    price: 'Harga: Rp 60.000',
+                    features: '14 Homes\n500K money\n20K Claim Block\nFeed\nHeal\nFly\nRepair'
+                },
+                'custom-rank': {
+                    price: 'Harga: Rp 120.000',
+                    features: '16 Homes\n500K money\n25K Claim Block\nNick\nFeed\nHeal\nFly\nRepair All\nEc / Enderchest'
+                }
+            };
+
+            document.getElementById('rank-price').innerText = rankDetails[rank].price;
+            document.getElementById('rank-features').innerText = rankDetails[rank].features;
+            document.getElementById('popup').style.display = 'flex';
+            document.getElementById('click-sound').play();
+        }
+
+        function hidePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+
+        function showFeatures() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('feature-popup').style.display = 'flex';
+        }
+
+        function hideFeaturePopup() {
+            document.getElementById('feature-popup').style.display = 'none';
+        }
+
+        function showWhatsappPopup() {
+            document.getElementById('whatsapp-popup').style.display = 'block';
+        }
+
+        function hideWhatsappPopup() {
+            document.getElementById('whatsapp-popup').style.display = 'none';
+        }
+
+        document.querySelector('.whatsapp-button').addEventListener('click', showWhatsappPopup);
+    </script>
+</body>
+</html>
